@@ -1,11 +1,8 @@
-# Dependencies
 import csv
 
-# Files to load and output 
 file_to_load = "UofTSTG201905DATA3/Week 03 - Python/Homework/PyBank_budget_data.csv"
 file_to_output = "UofTSTG201905DATA3/Week 03 - Python/Homework/PyBank_budget_analysis.txt"
 
-# Track various revenue parameters
 total_months = 0
 prev_revenue = 0
 month_of_change = []
@@ -14,7 +11,6 @@ greatest_increase = ["", 0]
 greatest_decrease = ["", 9999999999999999999]
 total_revenue = 0
 
-# Read the csv and convert it into a list of dictionaries
 with open(file_to_load) as revenue_data:
     reader = csv.DictReader(revenue_data)
 
@@ -43,7 +39,7 @@ with open(file_to_load) as revenue_data:
 # Calculate the Average Revenue Change
 revenue_avg = sum(revenue_change_list) / len(revenue_change_list)
 
-# Generate Output Summary
+# Budget Analysis
 output = (
     f"\nFinancial Analysis\n"
     f"----------------------------\n"
