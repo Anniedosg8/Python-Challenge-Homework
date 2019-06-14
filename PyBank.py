@@ -1,57 +1,63 @@
-import csv
 
-file_to_load = "UofTSTG201905DATA3/Week 03 - Python/Homework/PyBank_budget_data.csv"
-file_to_output = "UofTSTG201905DATA3/Week 03 - Python/Homework/PyBank_budget_analysis.txt"
+# open and read csv
+with open(budget_data, newline="") as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
+    csv_header = next(csvfile)
+    # skip header row
+    print(csv_header)
 
-total_months = 0
-prev_revenue = 0
-month_of_change = []
-revenue_change_list = []
-greatest_increase = ["", 0]
-greatest_decrease = ["", 9999999999999999999]
-total_revenue = 0
+    # find net amount of profit and loss
+    P = []
+    months = []
 
-with open(file_to_load) as revenue_data:
-    reader = csv.DictReader(revenue_data)
+    #read through each row of data after header
+    for rows in csvreader:
+        P.append(int(rows[1]))
+        months.append(rows[0])
 
-    for row in reader:
+    # find revenue change
+    revenue_change = []
 
-        # Track the total
-        total_months = total_months + 1
-        total_revenue = total_revenue + int(row["Revenue"])
+    for x in range(1, len(P)):
+        revenue_change.append((int(P[x]) - int(P[x-1])))
+    
+    # calculate average revenue change
+    revenue_average = sum(revenue_change) / len(revenue_change)
+    
+    # calculate total length of months
+    total_months = len(months)
 
-        # Track the revenue change
-        revenue_change = int(row["Revenue"]) - prev_revenue
-        prev_revenue = int(row["Revenue"])
-        revenue_change_list = revenue_change_list + [revenue_change]
-        month_of_change = month_of_change + [row["Date"]]
+    # greatest increase in revenue
+    greatest_increase = max(revenue_change)
+    # greatest decrease in revenue
+    greatest_decrease = min(revenue_change)
 
-        # Calculate the greatest increase
-        if (revenue_change > greatest_increase[1]):
-            greatest_increase[0] = row["Date"]
-            greatest_increase[1] = revenue_change
+print("Financial Analysis")
 
-        # Calculate the greatest decrease
-        if (revenue_change < greatest_decrease[1]):
-            greatest_decrease[0] = row["Date"]
-            greatest_decrease[1] = revenue_change
+print("total months: " + str(total_months))
 
-# Calculate the Average Revenue Change
-revenue_avg = sum(revenue_change_list) / len(revenue_change_list)
+print("Total: " + "$" + str(sum(P)))
 
-# Budget Analysis
-output = (
-    f"\nFinancial Analysis\n"
-    f"----------------------------\n"
-    f"Total Months: {total_months}\n"
-    f"Total Revenue: ${total_revenue}\n"
-    f"Average Revenue Change: ${revenue_avg}\n"
-    f"Greatest Increase in Revenue: {greatest_increase[0]} (${greatest_increase[1]})\n"
-    f"Greatest Decrease in Revenue: {greatest_decrease[0]} (${greatest_decrease[1]})\n")
+print("Average change: " + "$" + str(revenue_average))
 
-# Print the output (to terminal)
-print(output)
+print("Greatest Increase in Profits: " + str(months[revenue_change.index(max(revenue_change))+1]) + " " + "$" + str(greatest_increase))
 
-# Export the results to text file
-with open(file_to_output, "w") as txt_file:
-    txt_file.write(output)
+print("Greatest Decrease in Profits: " + str(months[revenue_change.index(min(revenue_change))+1]) + " " + "$" + str(greatest_decrease))
+
+file = open("output.txt","w")
+
+file.write("Financial Analysis" + "\n")
+
+file.write("...................................................................................." + "\n")
+
+file.write("total months: " + str(total_months) + "\n")
+
+file.write("Total: " + "$" + str(sum(P)) + "\n")
+
+file.write("Average change: " + "$" + str(revenue_average) + "\n")
+
+file.write("Greatest Increase in Profits: " + str(months[revenue_change.index(max(revenue_change))+1]) + " " + "$" + str(greatest_increase) + "\n")
+
+file.write("Greatest Decrease in Profits: " + str(months[revenue_change.index(min(revenue_change))+1]) + " " + "$" + str(greatest_decrease) + "\n")
+
+file.close()
