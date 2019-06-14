@@ -1,3 +1,9 @@
+#import library
+import os
+import csv
+
+#joining path
+budget_data = os.path.join("Resources", "budget_data.csv")
 
 # open and read csv
 with open(budget_data, newline="") as csvfile:
